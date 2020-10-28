@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">MNNIT E-COMMUNITY</string>
+    <string name="welcome">Welcome</string>
+    <string name="to">to</string>
+    <string name="preference_file_key">learnData</string>
+    <string name="loginSuccessMessage">Welcome back!</string>
+    <string name="emptyEmailId">Value for Email Id is empty or null.</string>
+    <string name="emptyPassword">Value for password is empty or null.</string>
+    <string name="loginError">Something went wrong. Please try again.</string>
+    <string name="invalidEmailId">Please enter a valid Email Id.</string>
+    <string name="fullNameHint">Enter your full name</string>
+    <string name="passwordHint">Enter password</string>
+    <string name="emailHint">Enter email Id</string>
+    <string name="emptyName">Value for name is empty or null</string>
+    <string name="missMatchPassword">Please enter right confirm password.</string>
 </resources>

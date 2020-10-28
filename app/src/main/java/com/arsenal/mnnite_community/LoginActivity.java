@@ -29,11 +29,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth= FirebaseAuth.getInstance();
-        emailText=findViewById(R.id.email);
-        passText= findViewById(R.id.password);
-        loginbtn=findViewById(R.id.login);
-        forgotPass = findViewById(R.id.forgetPassword);
-        sugnUpbtn =findViewById(R.id.signUp);
+        emailText=findViewById(R.id.emailEditText);
+        passText= findViewById(R.id.passwordEditText);
+        loginbtn=findViewById(R.id.loginButton);
+        forgotPass = findViewById(R.id.forgotPasswordTextView);
+        sugnUpbtn =findViewById(R.id.btnSignup);
 
         forgotPass.setOnClickListener(new View.OnClickListener() {
             @Override

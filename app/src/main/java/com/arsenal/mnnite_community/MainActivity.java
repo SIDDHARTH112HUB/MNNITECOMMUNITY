@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
-    EditText nameText,emailText,passwordText;
+    EditText nameText,emailText,passwordText,repass;
     Button signupBtn , loginBtn;
 
     @Override
@@ -27,15 +27,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth=FirebaseAuth.getInstance();
-        nameText=findViewById(R.id.editName);
-        emailText=findViewById(R.id.editEmail);
-        passwordText=findViewById(R.id.editPass);
-        signupBtn=findViewById(R.id.signupBtn);
-        loginBtn=findViewById(R.id.loginBtn);
+        nameText=findViewById(R.id.fullNameEditText);
+        emailText=findViewById(R.id.emailEditText);
+        passwordText=findViewById(R.id.passwordEditText);
+        signupBtn=findViewById(R.id.signupButton);
+        loginBtn=findViewById(R.id.btnLogin);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent loginIntent =new Intent(com.arsenal.mnnite_community.MainActivity.this,LoginActivity.class);
+                Intent loginIntent =new Intent(MainActivity.this,LoginActivity.class);
                 startActivity(loginIntent);
             }
         });
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 String name =nameText.getText().toString();
                 String email=emailText.getText().toString();
                 String password= passwordText.getText().toString();
-                if(TextUtils.isEmpty(email) || TextUtils.isEmpty(name)||TextUtils.isEmpty(password))
+                if((TextUtils.isEmpty(email) || TextUtils.isEmpty(name)||TextUtils.isEmpty(password)))
                 {
                     Toast.makeText(com.arsenal.mnnite_community.MainActivity.this, "Enter Every Details", Toast.LENGTH_SHORT).show();
                 }
