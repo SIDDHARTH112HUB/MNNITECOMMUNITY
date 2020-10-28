@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     EditText nameText,emailText,passwordText,repass;
     Button signupBtn , loginBtn;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         passwordText=findViewById(R.id.passwordEditText);
         signupBtn=findViewById(R.id.signupButton);
         loginBtn=findViewById(R.id.btnLogin);
+        if (mAuth.getCurrentUser()!=null){
+            startActivity(new Intent(this,Dashboard.class));
+            finish();
+        }
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
