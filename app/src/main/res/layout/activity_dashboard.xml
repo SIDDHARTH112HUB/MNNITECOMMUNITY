@@ -12,5 +12,17 @@
        android:layout_centerVertical="true"
        android:layout_centerHorizontal="true"
        android:text="Log Out"></Button>
+   <com.google.android.material.floatingactionbutton.FloatingActionButton
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+       android:layout_alignParentEnd="true"
+       android:layout_marginEnd="20dp"
+       android:layout_marginBottom="20dp"
+       android:src="@drawable/ic_ass"
+       android:backgroundTint="@color/Orange"
+       app:backgroundTint="#F09"
+       app:rippleColor="#FFF"
+       android:id="@+id/fabedit"/>
 
 </RelativeLayout>

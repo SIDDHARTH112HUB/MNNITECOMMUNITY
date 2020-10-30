@@ -15,6 +15,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
@@ -66,7 +69,11 @@ public class MainActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
                                         Toast.makeText(com.arsenal.mnnite_community.MainActivity.this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
+
+                                        updateUserInfo( name ,mAuth.getCurrentUser());
+
                                         startActivity(new Intent(com.arsenal.mnnite_community.MainActivity.this,Dashboard.class));
+                                        finish();
                                     }
                                     else{
                                         Toast.makeText(com.arsenal.mnnite_community.MainActivity.this, "Couldn't create a Account", Toast.LENGTH_SHORT).show();
@@ -76,5 +83,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void updateUserInfo(String name, FirebaseUser currentUser) {
+
+
+        StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_info");
+
     }
 }

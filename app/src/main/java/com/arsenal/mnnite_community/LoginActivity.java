@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent signUpIntent =new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(signUpIntent);
+                finish();
             }
         });
 
@@ -72,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, "Log In Successful", Toast.LENGTH_SHORT).show();
                                         Intent dashboardIntent =new Intent(LoginActivity.this,Dashboard.class);
                                         startActivity(dashboardIntent);
+                                        finish();
                                     }
                                     else{
                                         Toast.makeText(LoginActivity.this, "Please enter correct details ", Toast.LENGTH_SHORT).show();
