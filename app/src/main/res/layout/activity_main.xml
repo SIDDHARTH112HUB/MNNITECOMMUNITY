@@ -42,24 +42,24 @@
             app:layout_constraintVertical_bias="0.053" />
 
     <TextView
-            android:id="@+id/logoText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/app_name"
-            android:textColor="@android:color/holo_purple"
-            android:textSize="40dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.086"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.029" />
+        android:id="@+id/logoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/app_name"
+        android:textColor="@android:color/holo_purple"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.615"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.014" />
 
-        <TextView
+    <TextView
             android:id="@+id/signupText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,9 +91,10 @@
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.433"
         app:layout_constraintStart_toEndOf="@+id/btnLogin"
-        app:layout_constraintTop_toBottomOf="@+id/signupText"
-        app:layout_constraintVertical_bias="0.106" />
+        app:layout_constraintTop_toBottomOf="@+id/regUserPhoto"
+        app:layout_constraintVertical_bias="0.088" />
 
     <EditText
         android:id="@+id/emailEditText"
@@ -105,11 +106,12 @@
         android:ems="10"
         android:hint="@string/emailHint"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnLogin"
+        app:layout_constraintBottom_toTopOf="@+id/signupButton"
+        app:layout_constraintEnd_toEndOf="@+id/fullNameEditText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/fullNameEditText"
         app:layout_constraintTop_toBottomOf="@+id/fullNameEditText"
-        app:layout_constraintVertical_bias="0.155" />
+        app:layout_constraintVertical_bias="0.185" />
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -122,10 +124,11 @@
         android:hint="@string/passwordHint"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/signupButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnSignup"
+        app:layout_constraintEnd_toEndOf="@+id/emailEditText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/emailEditText"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText"
-        app:layout_constraintVertical_bias="0.285" />
+        app:layout_constraintVertical_bias="0.556" />
 
     <Button
             android:id="@+id/signupButton"
@@ -144,6 +147,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.966" />
+
+    <ImageView
+        android:id="@+id/regUserPhoto"
+        android:layout_width="80dp"
+        android:layout_height="95dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/signupButton"
+        app:layout_constraintEnd_toEndOf="@+id/fullNameEditText"
+        app:layout_constraintHorizontal_bias="0.565"
+        app:layout_constraintStart_toStartOf="@+id/fullNameEditText"
+        app:layout_constraintTop_toBottomOf="@+id/signupText"
+        app:layout_constraintVertical_bias="0.056"
+        app:srcCompat="@mipmap/download" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

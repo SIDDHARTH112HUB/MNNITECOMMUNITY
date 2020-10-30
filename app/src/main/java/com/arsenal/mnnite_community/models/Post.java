@@ -12,6 +12,7 @@ public class Post {
     private String userPhoto;
     private Object timeStamp ;
 
+
     public Post(String postKey, String title, String description, String picture, String userId, String userPhoto) {
         this.postKey = postKey;
         this.title = title;

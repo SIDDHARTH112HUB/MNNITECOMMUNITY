@@ -22,6 +22,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.arsenal.mnnite_community.models.Post;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,7 +44,7 @@ public class Dashboard extends AppCompatActivity {
     ImageView popupPostImage, popupAddBtn;
     TextView popupTitle, popupDescription;
     ProgressBar popupClickProgress;
-    private Uri pickedImgUri = null;
+    private Uri pickedImgUri;
     FirebaseAuth mAuth;
     FirebaseUser currentUser ;
 
@@ -53,6 +54,7 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         btnLogOut = findViewById(R.id.btnLogOut);
+        currentUser=FirebaseAuth.getInstance().getCurrentUser();
         edit = findViewById(R.id.fabedit);
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,19 +158,23 @@ public class Dashboard extends AppCompatActivity {
 
         popupAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
                 popupAddBtn.setVisibility(View.INVISIBLE);
                 popupClickProgress.setVisibility(View.VISIBLE);
 
+                // we need to test all input fields (Title and description ) and post image
+
                 if (!popupTitle.getText().toString().isEmpty()
                         && !popupDescription.getText().toString().isEmpty()
-                        && pickedImgUri != null) {
+                        && pickedImgUri != null ) {
 
-
+                    //everything is okey no empty or null value
+                    // TODO Create Post Object and add it to firebase database
+                    // first we need to upload post Image
+                    // access firebase storage
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("blog_images");
                     final StorageReference imageFilePath = storageReference.child(pickedImgUri.getLastPathSegment());
-
                     imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -209,13 +215,23 @@ public class Dashboard extends AppCompatActivity {
                         }
                     });
 
-                }
 
+
+
+
+
+
+
+                }
                 else {
-                    showMessage("Please verify all input fields and choose Post Image");
+                    showMessage("Please verify all input fields and choose Post Image") ;
                     popupAddBtn.setVisibility(View.VISIBLE);
                     popupClickProgress.setVisibility(View.INVISIBLE);
+
                 }
+
+
+
             }
         });
 
