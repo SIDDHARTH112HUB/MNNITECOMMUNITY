@@ -1,28 +1,28 @@
 package com.arsenal.mnnite_community;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.arsenal.mnnite_community.models.Post;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,11 +34,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import static com.arsenal.mnnite_community.R.menu.main_menu;
+
 public class Dashboard extends AppCompatActivity {
 
     private static final int PReqCode = 2;
     private static final int REQUESCODE = 2;
-    private Button btnLogOut;
     private FloatingActionButton edit;
     Dialog popAddPost;
     ImageView popupPostImage, popupAddBtn;
@@ -48,23 +49,24 @@ public class Dashboard extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser currentUser ;
 
+    private Toolbar mainToolbar;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        btnLogOut = findViewById(R.id.btnLogOut);
+
+        mainToolbar=(Toolbar)findViewById(R.id.main_toolbar);
+        setSupportActionBar(mainToolbar);
+
+        getSupportActionBar().setTitle("Home");
+
+
         currentUser=FirebaseAuth.getInstance().getCurrentUser();
         edit = findViewById(R.id.fabedit);
-        btnLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intentLogOut = new Intent(Dashboard.this, MainActivity.class);
-                startActivity(intentLogOut);
-                finish();
-            }
-        });
         iniPopup();
         setupPopupImageClick();
 
@@ -74,6 +76,51 @@ public class Dashboard extends AppCompatActivity {
                 popAddPost.show();
             }
         });
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(main_menu,menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+
+            case R.id.action_logout:
+                logout();
+
+                return true;
+            case R.id.setting_button   :
+                startSetting();
+
+                return  true;
+
+            default:
+                return false;
+
+
+
+        }
+
+
+    }
+
+    private void startSetting() {
+        Intent intentLogOut = new Intent(Dashboard.this, setup_activity.class);
+        startActivity(intentLogOut);
+        finish();
+    }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intentLogOut = new Intent(Dashboard.this, LoginActivity.class);
+        startActivity(intentLogOut);
+        finish();
 
     }
 

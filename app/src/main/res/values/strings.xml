@@ -13,4 +13,7 @@
     <string name="emailHint">Enter email Id</string>
     <string name="emptyName">Value for name is empty or null</string>
     <string name="missMatchPassword">Please enter right confirm password.</string>
+    <string name="action_search">Search</string>
+    <string name="action_setting">Account Setting</string>
+    <string name="action_logout">Logout</string>
 </resources>
