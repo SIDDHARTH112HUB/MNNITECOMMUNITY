@@ -59,30 +59,30 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.014" />
 
-    <TextView
-            android:id="@+id/signupText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="Signup"
-            android:textSize="35dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.513"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.216" />
 
+    <TextView
+        android:id="@+id/signupText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Signup"
+        android:textSize="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.598"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.224" />
 
     <EditText
         android:id="@+id/fullNameEditText"
         android:layout_width="wrap_content"
         android:layout_height="44dp"
+        android:layout_marginBottom="356dp"
         android:alpha="0.23"
         android:background="@drawable/textviewshape"
         android:drawableLeft="@drawable/ic_action_person"
@@ -92,26 +92,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.433"
-        app:layout_constraintStart_toEndOf="@+id/btnLogin"
-        app:layout_constraintTop_toBottomOf="@+id/regUserPhoto"
-        app:layout_constraintVertical_bias="0.088" />
+        app:layout_constraintStart_toEndOf="@+id/btnLogin" />
 
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="wrap_content"
         android:layout_height="44dp"
+        android:layout_marginTop="12dp"
         android:alpha="0.23"
         android:background="@drawable/textviewshape"
         android:drawableLeft="@drawable/ic_action_user"
         android:ems="10"
         android:hint="@string/emailHint"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/signupButton"
+        app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
         app:layout_constraintEnd_toEndOf="@+id/fullNameEditText"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/fullNameEditText"
         app:layout_constraintTop_toBottomOf="@+id/fullNameEditText"
-        app:layout_constraintVertical_bias="0.185" />
+        app:layout_constraintVertical_bias="0.531" />
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -127,39 +126,26 @@
         app:layout_constraintEnd_toEndOf="@+id/emailEditText"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/emailEditText"
-        app:layout_constraintTop_toBottomOf="@+id/emailEditText"
-        app:layout_constraintVertical_bias="0.556" />
+        app:layout_constraintTop_toBottomOf="@+id/signupText"
+        app:layout_constraintVertical_bias="0.833" />
 
     <Button
-            android:id="@+id/signupButton"
-            android:layout_width="175dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/buttonshape"
-            android:text="Signup"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.804"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.966" />
-
-    <ImageView
-        android:id="@+id/regUserPhoto"
-        android:layout_width="80dp"
-        android:layout_height="95dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/signupButton"
-        app:layout_constraintEnd_toEndOf="@+id/fullNameEditText"
-        app:layout_constraintHorizontal_bias="0.565"
-        app:layout_constraintStart_toStartOf="@+id/fullNameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/signupText"
-        app:layout_constraintVertical_bias="0.056"
-        app:srcCompat="@mipmap/download" />
+        android:id="@+id/signupButton"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/buttonshape"
+        android:text="Signup"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.668"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.842" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

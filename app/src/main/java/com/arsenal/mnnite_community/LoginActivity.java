@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(LoginActivity.this, "Email Sent", Toast.LENGTH_SHORT).show();
+                                showMessage("Email Sent");
                             }
                         });
             }
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email=emailText.getText().toString();
                 String password= passText.getText().toString();
                 if(TextUtils.isEmpty(email)||TextUtils.isEmpty(password)){
-                    Toast.makeText(LoginActivity.this, "Enter every detail", Toast.LENGTH_SHORT).show();
+                    showMessage("Enter every detail");
                 }
                 else {
                     mAuth.signInWithEmailAndPassword(email,password)
@@ -70,13 +70,13 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(LoginActivity.this, "Log In Successful", Toast.LENGTH_SHORT).show();
+                                        showMessage("Log In Successful");
                                         Intent dashboardIntent =new Intent(LoginActivity.this,Dashboard.class);
                                         startActivity(dashboardIntent);
                                         finish();
                                     }
                                     else{
-                                        Toast.makeText(LoginActivity.this, "Please enter correct details ", Toast.LENGTH_SHORT).show();
+                                        showMessage("Please enter correct details");
                                     }
                                 }
 
@@ -87,5 +87,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
     }
 }

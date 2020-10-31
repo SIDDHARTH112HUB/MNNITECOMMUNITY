@@ -76,7 +76,7 @@ public class setup_activity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            Toast.makeText(setup_activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+                            showMessage("Image Uploaded");
 
                         }
                     }); 
@@ -138,7 +138,7 @@ public class setup_activity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(setup_activity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-                Toast.makeText(setup_activity.this,"Please accept for required permission",Toast.LENGTH_SHORT).show();
+                showMessage("Please accept for required permission");
 
             }
 
@@ -160,5 +160,8 @@ public class setup_activity extends AppCompatActivity {
         }
 
 
+    }
+    private void showMessage(String message) {
+        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
     }
 }
