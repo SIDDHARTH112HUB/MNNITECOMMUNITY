@@ -113,7 +113,6 @@ public class Dashboard extends AppCompatActivity {
     private void startSetting() {
         Intent intentLogOut = new Intent(Dashboard.this, setup_activity.class);
         startActivity(intentLogOut);
-        finish();
     }
 
     private void logout() {
