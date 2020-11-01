@@ -39,9 +39,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 public class AddPost extends AppCompatActivity {
-    private static final int MAX_LENGTH = 100 ;
     private EditText title,description;
     private ImageView postImg;
     private ProgressBar progressBar;
@@ -130,20 +130,20 @@ public class AddPost extends AppCompatActivity {
                 }else{
 
 
-                    String randomName = random();
+                    String randomName = UUID.randomUUID().toString();
                     StorageReference filePath = storageReference.child("Post_images").child(randomName+".jpg");
 
                     filePath.putFile(postImageUri).addOnSuccessListener(taskSnapshot -> {
 
                         filePath.getDownloadUrl().addOnSuccessListener(uri -> {
-                            DocumentReference documentReference=fStore.collection("Posts").document(userID);
+
                             Map<String, String> postMap = new HashMap<>();
+                            postMap.put("Description,", postDescription);
                             postMap.put("image", uri.toString());
                             postMap.put("Title", postTitle);
-                            postMap.put("Description,", postDescription);
-                            postMap.put("Current_user_id", userID);
                             postMap.put("post_time", new Date().toString());
-                            documentReference.set(postMap).addOnSuccessListener(aVoid -> {
+                            postMap.put("Current_user_id", userID);
+                            fStore.collection("Posts").add(postMap).addOnSuccessListener(aVoid -> {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 Toast.makeText(AddPost.this, "Post added successfully", Toast.LENGTH_SHORT).show();
                                 new Handler().postDelayed(() -> {
@@ -161,25 +161,6 @@ public class AddPost extends AppCompatActivity {
 
                     }).addOnFailureListener(e -> showMessage(e.getMessage()));
 
-//                    DocumentReference documentReference=fStore.collection("Posts").document(userID);
-//                    Map<String,Object> post=new HashMap<>();
-//                    post.put("Title",postTitle);
-//                    post.put("Description",postDescription);
-//                    post.put("image",postImg.toString());
-//                    documentReference.set(post).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                        @Override
-//                        public void onSuccess(Void aVoid) {
-//                            progressBar.setVisibility(View.INVISIBLE);
-//                            Toast.makeText(AddPost.this, "post added successfully", Toast.LENGTH_SHORT).show();
-//                            startActivity(new Intent(AddPost.this,Dashboard.class));
-//                            finish();
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Toast.makeText(AddPost.this, "post cant be added", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
                 }
 
 
@@ -190,16 +171,5 @@ public class AddPost extends AppCompatActivity {
 
     private void showMessage(String message) {
         Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
-    }
-    public static String random() {
-        Random generator = new Random();
-        StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(MAX_LENGTH);
-        char tempChar;
-        for (int i = 0; i < randomLength; i++){
-            tempChar = (char) (generator.nextInt(96) + 32);
-            randomStringBuilder.append(tempChar);
-        }
-        return randomStringBuilder.toString();
     }
 }

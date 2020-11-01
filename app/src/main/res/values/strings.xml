@@ -16,4 +16,9 @@
     <string name="action_search">Search</string>
     <string name="action_setting">Account Setting</string>
     <string name="action_logout">Logout</string>
+    <string name="bottom_home">Home</string>
+    <string name="bottom_notification">Notification</string>
+    <string name="bottom_account">Account</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

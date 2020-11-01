@@ -27,10 +27,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,7 +68,13 @@ public class Dashboard extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
     String userId;
 
+    private BottomNavigationView mainbottomNav;
+
     private Toolbar mainToolbar;
+
+    private homeFragment homeFragment;
+    private NotificationFragment notificationFragment;
+    private Account_Fragment accountFragment;
 
 
 
@@ -76,10 +85,7 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-
-
-
-
+        mainbottomNav = findViewById(R.id.mainBottomNav);
 
 
         //instantiating firebase declarations
@@ -96,6 +102,35 @@ public class Dashboard extends AppCompatActivity {
         getSupportActionBar().setTitle("Home");
 
 
+        homeFragment=new homeFragment();
+        notificationFragment=new NotificationFragment();
+        accountFragment= new Account_Fragment();
+
+        replaceFragment(homeFragment);
+        mainbottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()){
+
+                    case R.id.bottom_action_home:
+                        replaceFragment(homeFragment);
+                        return true;
+                    case R.id.bottom_action_notification:
+                        replaceFragment(notificationFragment);
+                        return true;
+                    case R.id.bottom_action_account:
+                        replaceFragment(accountFragment);
+                        return true;
+
+                    default:
+                        return false;
+
+                }
+
+
+            }
+        });
 
         edit = findViewById(R.id.fabedit);
 
@@ -218,11 +253,14 @@ public class Dashboard extends AppCompatActivity {
 
     }
 
+    private void replaceFragment(Fragment fragment){
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_container,fragment);
+        fragmentTransaction.commit();
 
 
-
-
-
+    }
 
     private void showMessage(String message) {
 
