@@ -4,17 +4,23 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Image;
+import android.media.ImageReader;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.NonNull;
@@ -22,7 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.arsenal.mnnite_community.models.Post;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,9 +36,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.arsenal.mnnite_community.R.menu.main_menu;
 
@@ -46,10 +60,14 @@ public class Dashboard extends AppCompatActivity {
     TextView popupTitle, popupDescription;
     ProgressBar popupClickProgress;
     private Uri pickedImgUri;
+    //firebase declarations
     FirebaseAuth mAuth;
     FirebaseUser currentUser ;
+    FirebaseFirestore firebaseFirestore;
+    String userId;
 
     private Toolbar mainToolbar;
+
 
 
 
@@ -59,21 +77,35 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+
+
+
+
+
+
+        //instantiating firebase declarations
+        currentUser=FirebaseAuth.getInstance().getCurrentUser();
+        firebaseFirestore=FirebaseFirestore.getInstance();
+        mAuth=FirebaseAuth.getInstance();
+        userId=mAuth.getCurrentUser().getUid();
+
+
+
         mainToolbar=(Toolbar)findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
 
         getSupportActionBar().setTitle("Home");
 
 
-        currentUser=FirebaseAuth.getInstance().getCurrentUser();
+
         edit = findViewById(R.id.fabedit);
-        iniPopup();
-        setupPopupImageClick();
+
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popAddPost.show();
+                startActivity(new Intent(Dashboard.this,AddPost.class));
+
             }
         });
 
@@ -187,123 +219,11 @@ public class Dashboard extends AppCompatActivity {
 
     }
 
-    private void iniPopup() {
-
-        popAddPost = new Dialog(this);
-        popAddPost.setContentView(R.layout.pop_add_post);
-        popAddPost.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        popAddPost.getWindow().setLayout(Toolbar.LayoutParams.MATCH_PARENT, Toolbar.LayoutParams.WRAP_CONTENT);
-        popAddPost.getWindow().getAttributes().gravity = Gravity.TOP;
-
-        popupPostImage = popAddPost.findViewById(R.id.popup_img);
-        popupTitle = popAddPost.findViewById(R.id.popup_title);
-        popupDescription = popAddPost.findViewById(R.id.popup_description);
-        popupAddBtn = popAddPost.findViewById(R.id.popup_add);
-        popupClickProgress = popAddPost.findViewById(R.id.popup_progressBar);
-
-
-        popupAddBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                popupAddBtn.setVisibility(View.INVISIBLE);
-                popupClickProgress.setVisibility(View.VISIBLE);
-
-                // we need to test all input fields (Title and description ) and post image
-
-                if (!popupTitle.getText().toString().isEmpty()
-                        && !popupDescription.getText().toString().isEmpty()
-                        && pickedImgUri != null ) {
-
-                    //everything is okey no empty or null value
-                    // TODO Create Post Object and add it to firebase database
-                    // first we need to upload post Image
-                    // access firebase storage
-                    StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("blog_images");
-                    final StorageReference imageFilePath = storageReference.child(pickedImgUri.getLastPathSegment());
-                    imageFilePath.putFile(pickedImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                            imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    String imageDownlaodLink = uri.toString();
-                                    // create post Object
-                                    Post post = new Post(popupTitle.getText().toString(),
-                                            popupDescription.getText().toString(),
-                                            imageDownlaodLink,
-                                            currentUser.getUid(),
-                                            currentUser.getPhotoUrl().toString());
-
-                                    // Add post to firebase database
-
-                                    addPost(post);
-
-
-
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // something goes wrong uploading picture
-
-                                    showMessage(e.getMessage());
-                                    popupClickProgress.setVisibility(View.INVISIBLE);
-                                    popupAddBtn.setVisibility(View.VISIBLE);
-
-
-
-                                }
-                            });
-
-
-                        }
-                    });
 
 
 
 
 
-
-
-
-                }
-                else {
-                    showMessage("Please verify all input fields and choose Post Image") ;
-                    popupAddBtn.setVisibility(View.VISIBLE);
-                    popupClickProgress.setVisibility(View.INVISIBLE);
-
-                }
-
-
-
-            }
-        });
-
-
-    }
-
-    private void addPost(Post post) {
-
-        FirebaseDatabase database=FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Posts").push();
-
-        // get post unique ID and upadte post key
-        String key = myRef.getKey();
-        post.setPostKey(key);
-
-        myRef.setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                showMessage("Post Added successfully");
-                popupClickProgress.setVisibility(View.INVISIBLE);
-                popupAddBtn.setVisibility(View.VISIBLE);
-                popAddPost.dismiss();
-            }
-        });
-
-    }
 
     private void showMessage(String message) {
 

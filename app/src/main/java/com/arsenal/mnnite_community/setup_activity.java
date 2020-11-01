@@ -134,6 +134,7 @@ public class setup_activity extends AppCompatActivity {
                                 image_path.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
+                                        progressBar.setVisibility(View.INVISIBLE);
                                         storeFirestore(uri, username, userEmail, user_id);
                                     }
                                 });
