@@ -55,7 +55,6 @@ public class Dashboard extends AppCompatActivity {
     private static final int PReqCode = 2;
     private static final int REQUESCODE = 2;
     private FloatingActionButton edit;
-    Dialog popAddPost;
     ImageView popupPostImage, popupAddBtn;
     TextView popupTitle, popupDescription;
     ProgressBar popupClickProgress;

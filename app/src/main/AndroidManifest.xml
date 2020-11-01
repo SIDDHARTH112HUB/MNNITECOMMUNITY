@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MNNITECOMMUNITY">
-        <activity android:name=".AddPost"></activity>
+        <activity android:name=".AddPost" android:parentActivityName=".Dashboard"></activity>
         <activity android:name=".setup_activity" />
         <activity android:name=".Dashboard" />
         <activity android:name=".LoginActivity" />

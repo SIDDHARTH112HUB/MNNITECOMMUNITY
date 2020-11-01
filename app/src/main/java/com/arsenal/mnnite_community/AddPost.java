@@ -1,15 +1,19 @@
 package com.arsenal.mnnite_community;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -21,24 +25,41 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class AddPost extends AppCompatActivity {
+    private static final int MAX_LENGTH = 100 ;
     private EditText title,description;
     private ImageView postImg;
     private ProgressBar progressBar;
     private Button post;
 
+    private StorageReference storageReference;
+
+    FirebaseUser currentUser ;
+    String userId;
+
+    private Uri postImageUri;
+
     static int PReqCode = 1 ;
 
     FirebaseAuth mAuth;
     FirebaseFirestore fStore;
+
+    private Toolbar postToolbar;
 
     String userID;
 
@@ -52,6 +73,13 @@ public class AddPost extends AppCompatActivity {
         postImg=findViewById(R.id.postImg);
         progressBar=findViewById(R.id.postProgressBar);
         post=findViewById(R.id.postAdd);
+        storageReference=FirebaseStorage.getInstance().getReference();
+
+        postToolbar=(Toolbar)findViewById(R.id.post_toolbar);
+        setSupportActionBar(postToolbar);
+
+        getSupportActionBar().setTitle("Add new post");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mAuth=FirebaseAuth.getInstance();
         fStore=FirebaseFirestore.getInstance();
@@ -62,30 +90,37 @@ public class AddPost extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (Build.VERSION.SDK_INT >= 22) {
 
-                    checkAndRequestForPermission();
-
-
-                }
-                else
-                {
                     CropImage.activity()
                             .setGuidelines(CropImageView.Guidelines.ON)
                             .setAspectRatio(1,1)
                             .start(AddPost.this);
-                }
-
-
 
 
 
             }
         });
+        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+
+                postImageUri=result.getUri();
+                postImg.setImageURI(postImageUri);
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                post.setVisibility(View.INVISIBLE);
                 String postTitle=title.getText().toString();
                 String postDescription=description.getText().toString();
                 if (TextUtils.isEmpty(postTitle)){
@@ -93,26 +128,58 @@ public class AddPost extends AppCompatActivity {
                 }else  if (TextUtils.isEmpty(postDescription)){
                     description.setError("field required");
                 }else{
-                    progressBar.setVisibility(View.VISIBLE);
-                    DocumentReference documentReference=fStore.collection("Posts").document(userID);
-                    Map<String,Object> post=new HashMap<>();
-                    post.put("Title",postTitle);
-                    post.put("Description",postDescription);
-                    post.put("image",postImg.toString());
-                    documentReference.set(post).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(AddPost.this, "post added successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(AddPost.this,Dashboard.class));
-                            finish();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(AddPost.this, "post cant be added", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+
+
+                    String randomName = random();
+                    StorageReference filePath = storageReference.child("Post_images").child(randomName+".jpg");
+
+                    filePath.putFile(postImageUri).addOnSuccessListener(taskSnapshot -> {
+
+                        filePath.getDownloadUrl().addOnSuccessListener(uri -> {
+                            DocumentReference documentReference=fStore.collection("Posts").document(userID);
+                            Map<String, String> postMap = new HashMap<>();
+                            postMap.put("image", uri.toString());
+                            postMap.put("Title", postTitle);
+                            postMap.put("Description,", postDescription);
+                            postMap.put("Current_user_id", userID);
+                            postMap.put("post_time", new Date().toString());
+                            documentReference.set(postMap).addOnSuccessListener(aVoid -> {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(AddPost.this, "Post added successfully", Toast.LENGTH_SHORT).show();
+                                new Handler().postDelayed(() -> {
+                                    startActivity(new Intent(AddPost.this,Dashboard.class));
+                                    finish();
+                                }, 300);
+                            }).addOnFailureListener(e -> showMessage(e.getMessage()));
+
+
+                        });
+                        filePath.getDownloadUrl().addOnFailureListener(e -> {
+                            String error = e.getMessage();
+                            showMessage("Error : " + e);
+                        });
+
+                    }).addOnFailureListener(e -> showMessage(e.getMessage()));
+
+//                    DocumentReference documentReference=fStore.collection("Posts").document(userID);
+//                    Map<String,Object> post=new HashMap<>();
+//                    post.put("Title",postTitle);
+//                    post.put("Description",postDescription);
+//                    post.put("image",postImg.toString());
+//                    documentReference.set(post).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                        @Override
+//                        public void onSuccess(Void aVoid) {
+//                            progressBar.setVisibility(View.INVISIBLE);
+//                            Toast.makeText(AddPost.this, "post added successfully", Toast.LENGTH_SHORT).show();
+//                            startActivity(new Intent(AddPost.this,Dashboard.class));
+//                            finish();
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(AddPost.this, "post cant be added", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
                 }
 
 
@@ -120,37 +187,19 @@ public class AddPost extends AppCompatActivity {
         });
 
     }
-    private void checkAndRequestForPermission() {
 
-
-        if (ContextCompat.checkSelfPermission(AddPost.this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(AddPost.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-                showMessage("Please accept for required permission");
-
-            }
-
-            else
-            {
-                ActivityCompat.requestPermissions(AddPost.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        PReqCode);
-            }
-
-        }
-        else
-
-        {
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1,1)
-                    .start(AddPost.this);
-        }
-
-
-    }
     private void showMessage(String message) {
         Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+    }
+    public static String random() {
+        Random generator = new Random();
+        StringBuilder randomStringBuilder = new StringBuilder();
+        int randomLength = generator.nextInt(MAX_LENGTH);
+        char tempChar;
+        for (int i = 0; i < randomLength; i++){
+            tempChar = (char) (generator.nextInt(96) + 32);
+            randomStringBuilder.append(tempChar);
+        }
+        return randomStringBuilder.toString();
     }
 }
